@@ -15,26 +15,38 @@ export default function Summary() {
       }, {});
   }, [transactions]);
 
+  const maxValue = Math.max(1, ...Object.values(byCategory));
+
   return (
     <div>
-      <h1>Summary</h1>
+      <h1>
+        Summary
+        <button className="btn btn-secondary theme-toggle-btn" onClick={toggleTheme}>
+          {theme === "light" ? "🌙 Dark mode" : "☀️ Light mode"}
+        </button>
+      </h1>
 
-      <button onClick={toggleTheme}>
-        Switch to {theme === "light" ? "dark" : "light"} mode
-      </button>
-
-      <h2>Spending by Category</h2>
-      {Object.keys(byCategory).length === 0 ? (
-        <p>No expenses recorded yet.</p>
-      ) : (
-        <ul>
-          {Object.entries(byCategory).map(([category, total]) => (
-            <li key={category}>
-              {category}: ₱{total.toFixed(2)}
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="section-header">📊 Spending by Category</div>
+      <div className="panel">
+        {Object.keys(byCategory).length === 0 ? (
+          <p className="empty-state">No expenses recorded yet.</p>
+        ) : (
+          Object.entries(byCategory).map(([category, total]) => (
+            <div key={category} className="category-bar-row">
+              <div className="category-bar-label">
+                <span>{category}</span>
+                <span>₱{total.toFixed(2)}</span>
+              </div>
+              <div className="category-bar-track">
+                <div
+                  className="category-bar-fill"
+                  style={{ width: `${(total / maxValue) * 100}%` }}
+                />
+              </div>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import { useTransactions } from "../hooks/useTransactions";
+import Badge from "../components/Badge";
 
 export default function TransactionDetail() {
   const { id } = useParams();
@@ -12,7 +13,13 @@ export default function TransactionDetail() {
   const [formData, setFormData] = useState(transaction || {});
 
   if (!transaction) {
-    return <p>Transaction not found.</p>;
+    return (
+      <div>
+        <h1>Transaction Detail</h1>
+        <p className="empty-state">Transaction not found.</p>
+        <Link to="/" className="btn btn-secondary">Back to Dashboard</Link>
+      </div>
+    );
   }
 
   const handleChange = (e) => {
@@ -25,38 +32,77 @@ export default function TransactionDetail() {
   };
 
   const handleDelete = () => {
-    deleteTransaction(id);
-    navigate("/");
+    if (window.confirm("Delete this transaction?")) {
+      deleteTransaction(id);
+      navigate("/");
+    }
   };
 
   return (
     <div>
       <h1>Transaction Detail</h1>
+      <div className="panel-standalone" style={{ maxWidth: 480, margin: "0 auto" }}>
+        {isEditing ? (
+          <div>
+            <div className="form-group">
+              <label>Description</label>
+              <input name="description" value={formData.description} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Amount</label>
+              <input name="amount" type="number" value={formData.amount} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Type</label>
+              <select name="type" value={formData.type} onChange={handleChange}>
+                <option value="Income">Income</option>
+                <option value="Expense">Expense</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Category</label>
+              <input name="category" value={formData.category} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Date</label>
+              <input name="date" type="date" value={formData.date} onChange={handleChange} />
+            </div>
 
-      {isEditing ? (
-        <div>
-          <input name="description" value={formData.description} onChange={handleChange} />
-          <input name="amount" type="number" value={formData.amount} onChange={handleChange} />
-          <select name="type" value={formData.type} onChange={handleChange}>
-            <option value="Income">Income</option>
-            <option value="Expense">Expense</option>
-          </select>
-          <input name="category" value={formData.category} onChange={handleChange} />
-          <input name="date" type="date" value={formData.date} onChange={handleChange} />
-          <button onClick={handleSave}>Save</button>
-          <button onClick={() => setIsEditing(false)}>Cancel</button>
-        </div>
-      ) : (
-        <div>
-          <p>Description: {transaction.description}</p>
-          <p>Amount: ₱{transaction.amount}</p>
-          <p>Type: {transaction.type}</p>
-          <p>Category: {transaction.category}</p>
-          <p>Date: {transaction.date}</p>
-          <button onClick={() => setIsEditing(true)}>Edit</button>
-          <button onClick={handleDelete}>Delete</button>
-        </div>
-      )}
+            <div className="action-row">
+              <button className="btn btn-primary" onClick={handleSave}>Save</button>
+              <button className="btn btn-secondary" onClick={() => setIsEditing(false)}>Cancel</button>
+            </div>
+          </div>
+        ) : (
+          <div>
+            <div className="detail-grid">
+              <span className="label">Description</span>
+              <span>{transaction.description}</span>
+
+              <span className="label">Amount</span>
+              <span className={transaction.type === "Income" ? "amount-income" : "amount-expense"}>
+                ₱{Number(transaction.amount).toFixed(2)}
+              </span>
+
+              <span className="label">Type</span>
+              <Badge type={transaction.type === "Income" ? "income" : "expense"}>
+                {transaction.type === "Income" ? "⬆ Income" : "⬇ Expense"}
+              </Badge>
+
+              <span className="label">Category</span>
+              <Badge type="category">🏷 {transaction.category}</Badge>
+
+              <span className="label">Date</span>
+              <span>{transaction.date}</span>
+            </div>
+
+            <div className="action-row">
+              <button className="btn btn-secondary" onClick={() => setIsEditing(true)}>Edit</button>
+              <button className="btn btn-danger" onClick={handleDelete}>Delete</button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
