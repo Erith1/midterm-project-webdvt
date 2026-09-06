@@ -416,3 +416,9 @@ select, input {
   color: var(--accent-green);
   font-weight: 600;
 }
+
+.theme-toggle-nav {
+  margin-left: 8px;
+  padding: 8px 14px;
+  font-size: 13px;
+}

@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Navbar() {
+  const { theme, toggleTheme } = useTheme();
+
   return (
     <div className="navbar">
       <span className="brand">💰 Budget Tracker</span>
@@ -17,6 +20,9 @@ export default function Navbar() {
         <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : "")}>
           🕘 History
         </NavLink>
+        <button className="btn btn-secondary theme-toggle-nav" onClick={toggleTheme}>
+          {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+        </button>
       </div>
     </div>
   );

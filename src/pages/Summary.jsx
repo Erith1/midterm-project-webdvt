@@ -1,10 +1,8 @@
 import { useMemo } from "react";
 import { useTransactions } from "../hooks/useTransactions";
-import { useTheme } from "../context/ThemeContext";
 
 export default function Summary() {
   const { transactions } = useTransactions();
-  const { theme, toggleTheme } = useTheme();
 
   const byCategory = useMemo(() => {
     return transactions
@@ -19,12 +17,7 @@ export default function Summary() {
 
   return (
     <div>
-      <h1>
-        Summary
-        <button className="btn btn-secondary theme-toggle-btn" onClick={toggleTheme}>
-          {theme === "light" ? "🌙 Dark mode" : "☀️ Light mode"}
-        </button>
-      </h1>
+        <h1>Summary</h1>
 
       <div className="section-header">📊 Spending by Category</div>
       <div className="panel">
