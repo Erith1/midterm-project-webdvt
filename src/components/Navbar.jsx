@@ -14,6 +14,9 @@ export default function Navbar() {
         <NavLink to="/summary" className={({ isActive }) => (isActive ? "active" : "")}>
           📈 Summary
         </NavLink>
+        <NavLink to="/history" className={({ isActive }) => (isActive ? "active" : "")}>
+          🕘 History
+        </NavLink>
       </div>
     </div>
   );

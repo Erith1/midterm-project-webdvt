@@ -5,6 +5,7 @@ import Dashboard from "./pages/Dashboard";
 import AddTransaction from "./pages/AddTransaction";
 import TransactionDetail from "./pages/TransactionDetail";
 import Summary from "./pages/Summary";
+import EditHistory from "./pages/EditHistory";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/add" element={<AddTransaction />} />
           <Route path="/transaction/:id" element={<TransactionDetail />} />
           <Route path="/summary" element={<Summary />} />
+          <Route path="/history" element={<EditHistory />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

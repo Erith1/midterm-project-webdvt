@@ -383,3 +383,36 @@ select, input {
 .theme-toggle-btn {
   float: right;
 }
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.history-diff-grid {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr;
+  gap: 10px 16px;
+  align-items: center;
+}
+
+.history-diff-grid .label {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.history-changed-before {
+  color: var(--accent-red);
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
+.history-changed-after {
+  color: var(--accent-green);
+  font-weight: 600;
+}
