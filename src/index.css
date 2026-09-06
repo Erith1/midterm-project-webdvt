@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;500;600;700&display=swap');
 
 :root {
   --text: #4b4f58;
@@ -17,8 +17,8 @@
   --category-bg: #efe6fb;
   --category-text: #5b3fa0;
 
-  --sans: 'Dancing Script', cursive;
-  font: 18px/150% var(--sans);
+  --sans: 'Roboto Slab', serif;
+font: 16px/145% var(--sans);
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
