@@ -13,11 +13,11 @@ export function useFixedExpenses() {
   }, [fixedExpenses]);
 
   const addFixedExpense = (expense) => {
-    setFixedExpenses((prev) => [
-      ...prev,
-      { ...expense, id: Date.now().toString(), lastPaid: null },
-    ]);
-  };
+  setFixedExpenses((prev) => [
+    ...prev,
+    { ...expense, id: Date.now().toString(), lastPaid: null },
+  ]);
+};
 
   const updateFixedExpense = (id, updated) => {
     setFixedExpenses((prev) =>
