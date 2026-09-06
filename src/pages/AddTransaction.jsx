@@ -39,6 +39,16 @@ export default function AddTransaction() {
   const isCustomCategory = category === "Other";
   const finalCategory = isCustomCategory ? customCategory.trim() : category;
 
+  const handleReset = () => {
+    setDescription("");
+    setAmount("");
+    setType("Expense");
+    setCategory(CATEGORY_PRESETS[0]);
+    setCustomCategory("");
+    setDate(getToday());
+    setError("");
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -107,7 +117,10 @@ export default function AddTransaction() {
             <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
           </div>
 
-          <button type="submit" className="btn btn-primary">Save Transaction</button>
+          <div className="action-row">
+            <button type="submit" className="btn btn-primary">Save Transaction</button>
+            <button type="button" className="btn btn-secondary" onClick={handleReset}>Reset</button>
+          </div>
         </form>
       </div>
     </div>
