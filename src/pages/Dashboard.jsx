@@ -65,7 +65,7 @@ export default function Dashboard() {
 
       <div className="dashboard-layout">
         <div className="dashboard-sidebar">
-          <div className="section-header">🎯 Budget Objectives</div>
+          <div className="section-header">Budget Objectives</div>
           <div className="panel">
             {objectives.length === 0 ? (
               <p className="empty-state">No objectives yet.</p>
@@ -123,7 +123,7 @@ export default function Dashboard() {
             </div>
           </div>
 
-          <div className="section-header">📋 Transactions</div>
+          <div className="section-header">Transactions</div>
           <div className="panel" style={{ padding: 0 }}>
             {filtered.length === 0 ? (
               <p className="empty-state">No transactions found.</p>

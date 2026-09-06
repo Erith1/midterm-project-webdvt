@@ -19,7 +19,7 @@ export default function Summary() {
     <div>
         <h1>Summary</h1>
 
-      <div className="section-header">📊 Spending by Category</div>
+      <div className="section-header">Spending by Category</div>
       <div className="panel">
         {Object.keys(byCategory).length === 0 ? (
           <p className="empty-state">No expenses recorded yet.</p>

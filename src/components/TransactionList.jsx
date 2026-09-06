@@ -25,9 +25,9 @@ const TransactionList = memo(function TransactionList({ transactions }) {
             {t.type === "Income" ? "+" : "-"}₱{Number(t.amount).toFixed(2)}
           </span>
           <Badge type={t.type === "Income" ? "income" : "expense"}>
-            {t.type === "Income" ? "⬆ Income" : "⬇ Expense"}
-          </Badge>
-          <Badge type="category">🏷 {t.category}</Badge>
+  {t.type}
+</Badge>
+<Badge type="category">{t.category}</Badge>
         </Link>
       ))}
     </div>

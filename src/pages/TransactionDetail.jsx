@@ -86,11 +86,11 @@ export default function TransactionDetail() {
 
               <span className="label">Type</span>
               <Badge type={transaction.type === "Income" ? "income" : "expense"}>
-                {transaction.type === "Income" ? "⬆ Income" : "⬇ Expense"}
-              </Badge>
+  {transaction.type}
+</Badge>
 
-              <span className="label">Category</span>
-              <Badge type="category">🏷 {transaction.category}</Badge>
+<span className="label">Category</span>
+<Badge type="category">{transaction.category}</Badge>
 
               <span className="label">Date</span>
               <span>{transaction.date}</span>

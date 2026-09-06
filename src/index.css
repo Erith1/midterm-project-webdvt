@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@500;700&display=swap');
+
 :root {
   --text: #4b4f58;
   --text-h: #16171d;
@@ -15,8 +17,8 @@
   --category-bg: #efe6fb;
   --category-text: #5b3fa0;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  font: 16px/145% var(--sans);
+  --sans: 'Dancing Script', cursive;
+  font: 18px/150% var(--sans);
   color: var(--text);
   background: var(--bg);
   -webkit-font-smoothing: antialiased;
