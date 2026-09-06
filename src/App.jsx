@@ -6,6 +6,8 @@ import AddTransaction from "./pages/AddTransaction";
 import TransactionDetail from "./pages/TransactionDetail";
 import Summary from "./pages/Summary";
 import EditHistory from "./pages/EditHistory";
+import Subscriptions from "./pages/Subscriptions";
+import FixedExpenses from "./pages/FixedExpenses";
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
           <Route path="/transaction/:id" element={<TransactionDetail />} />
           <Route path="/summary" element={<Summary />} />
           <Route path="/history" element={<EditHistory />} />
+          <Route path="/subscriptions" element={<Subscriptions />} />
+          <Route path="/fixed-expenses" element={<FixedExpenses />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

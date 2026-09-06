@@ -1,12 +1,16 @@
 import { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTransactions } from "../hooks/useTransactions";
+import { useBudgetObjectives } from "../hooks/useBudgetObjectives";
 import TransactionList from "../components/TransactionList";
 
 export default function Dashboard() {
   const { transactions } = useTransactions();
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
+
+  const { objectives, addObjective, toggleObjective, deleteObjective } = useBudgetObjectives();
+  const [newObjective, setNewObjective] = useState("");
 
   const categories = useMemo(() => {
     const unique = new Set(transactions.map((t) => t.category));
@@ -31,6 +35,13 @@ export default function Dashboard() {
     return { balance: income - expense, totalIncome: income, totalExpense: expense };
   }, [transactions]);
 
+  const handleAddObjective = (e) => {
+    e.preventDefault();
+    if (!newObjective.trim()) return;
+    addObjective(newObjective.trim());
+    setNewObjective("");
+  };
+
   return (
     <div>
       <h1>Dashboard</h1>
@@ -52,39 +63,75 @@ export default function Dashboard() {
         </div>
       </div>
 
-      <div className="toolbar">
-        <Link to="/add" className="btn btn-primary">
-          + Add Transaction
-        </Link>
-
-        <div className="filter-group">
-          <label>
-            Category:
-            <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
-              {categories.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-            </select>
-          </label>
-
-          <label>
-            Type:
-            <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
-              <option value="All">All</option>
-              <option value="Income">Income</option>
-              <option value="Expense">Expense</option>
-            </select>
-          </label>
+      <div className="dashboard-layout">
+        <div className="dashboard-sidebar">
+          <div className="section-header">🎯 Budget Objectives</div>
+          <div className="panel">
+            {objectives.length === 0 ? (
+              <p className="empty-state">No objectives yet.</p>
+            ) : (
+              <ul className="objective-list">
+                {objectives.map((o) => (
+                  <li key={o.id} className="objective-item">
+                    <label>
+                      <input
+                        type="checkbox"
+                        checked={o.completed}
+                        onChange={() => toggleObjective(o.id)}
+                      />
+                      <span className={o.completed ? "objective-done" : ""}>{o.text}</span>
+                    </label>
+                    <button className="btn-remove-x" onClick={() => deleteObjective(o.id)}>✕</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            <form onSubmit={handleAddObjective} className="inline-add-form">
+              <input
+                type="text"
+                placeholder="New objective..."
+                value={newObjective}
+                onChange={(e) => setNewObjective(e.target.value)}
+              />
+              <button type="submit" className="btn btn-secondary">Add</button>
+            </form>
+          </div>
         </div>
-      </div>
 
-      <div className="section-header">📋 Transactions</div>
-      <div className="panel" style={{ padding: 0 }}>
-        {filtered.length === 0 ? (
-          <p className="empty-state">No transactions found.</p>
-        ) : (
-          <TransactionList transactions={filtered} />
-        )}
+        <div className="dashboard-main">
+          <div className="toolbar">
+            <Link to="/add" className="btn btn-primary">+ Add Transaction</Link>
+
+            <div className="filter-group">
+              <label>
+                Category:
+                <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+                  {categories.map((c) => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </label>
+
+              <label>
+                Type:
+                <select value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+                  <option value="All">All</option>
+                  <option value="Income">Income</option>
+                  <option value="Expense">Expense</option>
+                </select>
+              </label>
+            </div>
+          </div>
+
+          <div className="section-header">📋 Transactions</div>
+          <div className="panel" style={{ padding: 0 }}>
+            {filtered.length === 0 ? (
+              <p className="empty-state">No transactions found.</p>
+            ) : (
+              <TransactionList transactions={filtered} />
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
