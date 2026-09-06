@@ -23,11 +23,10 @@ export function useTransactions() {
   }, [editHistory]);
 
   const addTransaction = (transaction) => {
-    setTransactions((prev) => [
-      ...prev,
-      { ...transaction, id: Date.now().toString() },
-    ]);
-  };
+  const id = transaction.id || Date.now().toString();
+  setTransactions((prev) => [...prev, { ...transaction, id }]);
+  return id;
+};
 
   const updateTransaction = (id, updated) => {
     const original = transactions.find((t) => t.id === id);

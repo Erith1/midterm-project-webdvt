@@ -4,13 +4,21 @@ import { useTransactions } from "../hooks/useTransactions";
 import { useBudgetObjectives } from "../hooks/useBudgetObjectives";
 import TransactionList from "../components/TransactionList";
 
+function getToday() {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  const local = new Date(now.getTime() - offset * 60000);
+  return local.toISOString().split("T")[0];
+}
+
 export default function Dashboard() {
-  const { transactions } = useTransactions();
+  const { transactions, addTransaction, deleteTransaction } = useTransactions();
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [typeFilter, setTypeFilter] = useState("All");
 
-  const { objectives, addObjective, toggleObjective, deleteObjective } = useBudgetObjectives();
+  const { objectives, addObjective, setObjectiveState, deleteObjective } = useBudgetObjectives();
   const [newObjective, setNewObjective] = useState("");
+  const [newObjectiveAmount, setNewObjectiveAmount] = useState("");
 
   const categories = useMemo(() => {
     const unique = new Set(transactions.map((t) => t.category));
@@ -38,8 +46,33 @@ export default function Dashboard() {
   const handleAddObjective = (e) => {
     e.preventDefault();
     if (!newObjective.trim()) return;
-    addObjective(newObjective.trim());
+    addObjective(newObjective.trim(), newObjectiveAmount);
     setNewObjective("");
+    setNewObjectiveAmount("");
+  };
+
+  const handleToggleObjective = (objective) => {
+    if (!objective.completed) {
+      // Marking as complete: log an expense if it has an amount
+      if (objective.amount > 0) {
+        const txId = addTransaction({
+          description: `Objective: ${objective.text}`,
+          amount: objective.amount,
+          type: "Expense",
+          category: "Budget Objective",
+          date: getToday(),
+        });
+        setObjectiveState(objective.id, true, txId);
+      } else {
+        setObjectiveState(objective.id, true, null);
+      }
+    } else {
+      // Un-checking: remove the linked expense if one exists
+      if (objective.linkedTransactionId) {
+        deleteTransaction(objective.linkedTransactionId);
+      }
+      setObjectiveState(objective.id, false, null);
+    }
   };
 
   return (
@@ -77,21 +110,30 @@ export default function Dashboard() {
                       <input
                         type="checkbox"
                         checked={o.completed}
-                        onChange={() => toggleObjective(o.id)}
+                        onChange={() => handleToggleObjective(o)}
                       />
-                      <span className={o.completed ? "objective-done" : ""}>{o.text}</span>
+                      <span className={o.completed ? "objective-done" : ""}>
+                        {o.text}
+                        {o.amount > 0 && <span className="objective-amount"> (₱{o.amount.toFixed(2)})</span>}
+                      </span>
                     </label>
                     <button className="btn-remove-x" onClick={() => deleteObjective(o.id)}>✕</button>
                   </li>
                 ))}
               </ul>
             )}
-            <form onSubmit={handleAddObjective} className="inline-add-form">
+            <form onSubmit={handleAddObjective} className="inline-add-form-stacked">
               <input
                 type="text"
                 placeholder="New objective..."
                 value={newObjective}
                 onChange={(e) => setNewObjective(e.target.value)}
+              />
+              <input
+                type="number"
+                placeholder="Expense amount (optional)"
+                value={newObjectiveAmount}
+                onChange={(e) => setNewObjectiveAmount(e.target.value)}
               />
               <button type="submit" className="btn btn-secondary">Add</button>
             </form>

@@ -12,17 +12,28 @@ export function useBudgetObjectives() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(objectives));
   }, [objectives]);
 
-  const addObjective = (text) => {
-    setObjectives((prev) => [...prev, { id: Date.now().toString(), text, completed: false }]);
+  const addObjective = (text, amount) => {
+    setObjectives((prev) => [
+      ...prev,
+      {
+        id: Date.now().toString(),
+        text,
+        amount: amount ? Number(amount) : 0,
+        completed: false,
+        linkedTransactionId: null,
+      },
+    ]);
   };
 
-  const toggleObjective = (id) => {
-    setObjectives((prev) => prev.map((o) => (o.id === id ? { ...o, completed: !o.completed } : o)));
+  const setObjectiveState = (id, completed, linkedTransactionId) => {
+    setObjectives((prev) =>
+      prev.map((o) => (o.id === id ? { ...o, completed, linkedTransactionId } : o))
+    );
   };
 
   const deleteObjective = (id) => {
     setObjectives((prev) => prev.filter((o) => o.id !== id));
   };
 
-  return { objectives, addObjective, toggleObjective, deleteObjective };
+  return { objectives, addObjective, setObjectiveState, deleteObjective };
 }
