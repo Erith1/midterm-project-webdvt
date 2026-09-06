@@ -2,10 +2,12 @@ import { useState, useMemo } from "react";
 import { useSubscriptions } from "../hooks/useSubscriptions";
 
 export default function Subscriptions() {
-  const { subscriptions, addSubscription, toggleStatus, deleteSubscription } = useSubscriptions();
+  const { subscriptions, addSubscription, updateSubscription, toggleStatus, deleteSubscription } = useSubscriptions();
   const [name, setName] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("Activities");
+  const [editingId, setEditingId] = useState(null);
+  const [editData, setEditData] = useState({});
 
   const grouped = useMemo(() => {
     return subscriptions.reduce((acc, s) => {
@@ -21,6 +23,23 @@ export default function Subscriptions() {
     addSubscription({ name: name.trim(), amount: Number(amount), category });
     setName("");
     setAmount("");
+  };
+
+  const startEdit = (sub) => {
+    setEditingId(sub.id);
+    setEditData({ name: sub.name, amount: sub.amount, category: sub.category });
+  };
+
+  const saveEdit = (id) => {
+    if (!editData.name.trim() || Number(editData.amount) <= 0) return;
+    updateSubscription(id, { ...editData, amount: Number(editData.amount) });
+    setEditingId(null);
+  };
+
+  const handleDelete = (id) => {
+    if (window.confirm("Delete this subscription?")) {
+      deleteSubscription(id);
+    }
   };
 
   return (
@@ -59,16 +78,49 @@ export default function Subscriptions() {
             <div className="panel subscription-grid">
               {subs.map((s) => (
                 <div key={s.id} className="subscription-card">
-                  <button className="btn-remove-x float-right" onClick={() => deleteSubscription(s.id)}>✕</button>
-                  <div className="subscription-name">{s.name}</div>
-                  <div className="subscription-amount">₱{s.amount.toFixed(2)}</div>
-                  <button
-                    className={`badge ${s.status === "Active" ? "badge-income" : "badge-expense"}`}
-                    onClick={() => toggleStatus(s.id)}
-                    style={{ border: "none", cursor: "pointer" }}
-                  >
-                    {s.status}
-                  </button>
+                  {editingId === s.id ? (
+                    <div className="subscription-edit-form">
+                      <input
+                        type="text"
+                        value={editData.name}
+                        onChange={(e) => setEditData({ ...editData, name: e.target.value })}
+                      />
+                      <input
+                        type="number"
+                        value={editData.amount}
+                        onChange={(e) => setEditData({ ...editData, amount: e.target.value })}
+                      />
+                      <select
+                        value={editData.category}
+                        onChange={(e) => setEditData({ ...editData, category: e.target.value })}
+                      >
+                        <option value="Activities">Activities</option>
+                        <option value="Streaming">Streaming</option>
+                        <option value="Software">Software</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <div className="action-row">
+                        <button className="btn btn-primary" onClick={() => saveEdit(s.id)}>Save</button>
+                        <button className="btn btn-secondary" onClick={() => setEditingId(null)}>Cancel</button>
+                      </div>
+                    </div>
+                  ) : (
+                    <>
+                      <button className="btn-remove-x float-right" onClick={() => handleDelete(s.id)}>✕</button>
+                      <div className="subscription-name">{s.name}</div>
+                      <div className="subscription-amount">₱{s.amount.toFixed(2)}</div>
+                      <div className="subscription-actions">
+                        <button
+                          className={`badge ${s.status === "Active" ? "badge-income" : "badge-expense"}`}
+                          onClick={() => toggleStatus(s.id)}
+                          style={{ border: "none", cursor: "pointer" }}
+                        >
+                          {s.status}
+                        </button>
+                        <button className="btn-edit-inline" onClick={() => startEdit(s)}>Edit</button>
+                      </div>
+                    </>
+                  )}
                 </div>
               ))}
             </div>

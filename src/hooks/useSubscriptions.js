@@ -13,12 +13,23 @@ export function useSubscriptions() {
   }, [subscriptions]);
 
   const addSubscription = (sub) => {
-    setSubscriptions((prev) => [...prev, { ...sub, id: Date.now().toString(), status: "Active" }]);
+    setSubscriptions((prev) => [
+      ...prev,
+      { ...sub, id: Date.now().toString(), status: "Active" },
+    ]);
+  };
+
+  const updateSubscription = (id, updated) => {
+    setSubscriptions((prev) =>
+      prev.map((s) => (s.id === id ? { ...s, ...updated } : s))
+    );
   };
 
   const toggleStatus = (id) => {
     setSubscriptions((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, status: s.status === "Active" ? "Cancelled" : "Active" } : s))
+      prev.map((s) =>
+        s.id === id ? { ...s, status: s.status === "Active" ? "Cancelled" : "Active" } : s
+      )
     );
   };
 
@@ -26,5 +37,5 @@ export function useSubscriptions() {
     setSubscriptions((prev) => prev.filter((s) => s.id !== id));
   };
 
-  return { subscriptions, addSubscription, toggleStatus, deleteSubscription };
+  return { subscriptions, addSubscription, updateSubscription, toggleStatus, deleteSubscription };
 }
