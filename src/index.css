@@ -151,7 +151,7 @@ a {
   align-items: center;
   gap: 6px;
   padding: 10px 18px;
-  border-radius: 20px;
+  border-radius: 8px;
   border: none;
   font-size: 14px;
   font-weight: 600;
@@ -490,16 +490,16 @@ select, input {
 .inline-add-form {
   display: flex;
   gap: 8px;
+  margin-top: 12px;
 }
 
 .inline-add-form input {
   flex: 1;
+  min-width: 0;
 }
 
 .inline-add-form button {
-  border-radius: 6px;
-  padding: 8px 16px;
-  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .inline-add-form-stacked {
